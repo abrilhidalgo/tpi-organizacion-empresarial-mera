@@ -15,11 +15,11 @@ Para no descuidar la validación de identidad, el módulo propuesto completa aut
 - Diagrama BPMN: [carpeta docs/bpmn](docs/bpmn)
 
 ## Definición de "Listo"
-
+Una historia está lista cuando su proceso está modelado en el BPMN, sus criterios de aceptación están documentados y un par los revisó.
 ## Pull Requests revisados
    La constancia de la revisión de pares queda en los siguientes Pull Requests:
-   - [PR #4: Diagrama BPMN de la atención de llamada](https://github.com/abrilhidalgo/tpi-organizacion-empresarial-mera/pull/4), revisado por @AgustinGaitan
-   - [PR #5: Portada, definición de Listo e indicadores de control](https://github.com/abrilhidalgo/tpi-organizacion-empresarial-mera/pull/5), revisado por @AgustinGaitan
+- [PR #4: Diagrama BPMN de la atención de llamada](https://github.com/abrilhidalgo/tpi-organizacion-empresarial-mera/pull/4), revisado por @AgustinGaitan
+- [PR #5: Portada, definición de Listo e indicadores de control](https://github.com/abrilhidalgo/tpi-organizacion-empresarial-mera/pull/5), revisado por @AgustinGaitan
 
 ## Indicadores de control
 
