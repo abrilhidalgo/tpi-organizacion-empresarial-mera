@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.31.1">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_Cliente" name="Tarjetahabiente" />
+    <bpmn:participant id="Participant_Mera" name="Mera Solutions S.A. (campaña Prisma)" processRef="Process_Mera" />
+    <bpmn:messageFlow id="MF_1" name="Llama" sourceRef="Participant_Cliente" targetRef="StartEvent_Llamada" />
+    <bpmn:messageFlow id="MF_2" name="Número de gestión" sourceRef="Task_Informar" targetRef="Participant_Cliente" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Mera" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_Telesoft" name="Telesoft (sistema)">
+        <bpmn:flowNodeRef>Task_GenerarNro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Registrar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Reg</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Operador" name="Operador">
+        <bpmn:flowNodeRef>Task_Atender</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Prec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Revisar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Pedir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Preguntas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Valido</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_IndicarVerif</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Motivo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConsultaMin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Min</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_IndicarPago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InfoCond</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Acepta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_IniciarZHost</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CrearCaso</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Informar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Algo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Agradecer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Fin</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Modulo" name="Módulo de integración (sistema)">
+        <bpmn:flowNodeRef>Task_Volcar</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_IVR" name="IVR Avaya (sistema)">
+        <bpmn:flowNodeRef>StartEvent_Llamada</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_IVR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_IVR</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_Llamada" name="Llamada entrante" />
+    <bpmn:task id="Task_IVR" name="Solicitar DNI y tarjeta en el IVR" />
+    <bpmn:exclusiveGateway id="GW_IVR" name="¿Completó el IVR?" />
+    <bpmn:task id="Task_Volcar" name="Volcar DNI y tarjeta en Telesoft de forma automatica" />
+    <bpmn:task id="Task_Atender" name="Atender y presentarse" />
+    <bpmn:exclusiveGateway id="GW_Prec" name="¿Datos precargados?" />
+    <bpmn:task id="Task_Revisar" name="Revisar datos precargados y confirmar" />
+    <bpmn:task id="Task_Pedir" name="Solicitar DNI y tarjeta al cliente" />
+    <bpmn:task id="Task_Preguntas" name="Realizar las 3 preguntas de seguridad" />
+    <bpmn:exclusiveGateway id="GW_Valido" name="¿Validó identidad?" />
+    <bpmn:task id="Task_IndicarVerif" name="Indicar que verifique los datos y vuelva a llamar" />
+    <bpmn:task id="Task_Motivo" name="Consultar el motivo y sondear" />
+    <bpmn:task id="Task_ConsultaMin" name="Consultar en Z-Host si abonó el mínimo" />
+    <bpmn:exclusiveGateway id="GW_Min" name="¿Abonó el mínimo?" />
+    <bpmn:task id="Task_IndicarPago" name="Indicar que abone el mínimo y llame en 48-72 hs" />
+    <bpmn:task id="Task_InfoCond" name="Informar condiciones de financiación" />
+    <bpmn:exclusiveGateway id="GW_Acepta" name="¿Acepta la financiación?" />
+    <bpmn:task id="Task_IniciarZHost" name="Iniciar la gestión en Z-Host" />
+    <bpmn:task id="Task_CrearCaso" name="Copiar pantalla del alta y crear caso en Telesoft" />
+    <bpmn:task id="Task_GenerarNro" name="Generar nº de gestión de 9 dígitos" />
+    <bpmn:task id="Task_Informar" name="Informar nº de gestión y consultar si necesita algo más" />
+    <bpmn:exclusiveGateway id="GW_Algo" name="¿Necesita algo más?" />
+    <bpmn:task id="Task_Agradecer" name="Agradecer y finalizar la llamada" />
+    <bpmn:endEvent id="End_Fin" name="Llamada finalizada" />
+    <bpmn:task id="Task_Registrar" name="Registrar contacto tipificado en Telesoft" />
+    <bpmn:endEvent id="End_Reg" name="Llamada finalizada con contacto registrado" />
+    <bpmn:sequenceFlow id="f1" sourceRef="StartEvent_Llamada" targetRef="Task_IVR" />
+    <bpmn:sequenceFlow id="f2" sourceRef="Task_IVR" targetRef="GW_IVR" />
+    <bpmn:sequenceFlow id="f3" name="Sí" sourceRef="GW_IVR" targetRef="Task_Volcar" />
+    <bpmn:sequenceFlow id="f4" name="No" sourceRef="GW_IVR" targetRef="Task_Atender" />
+    <bpmn:sequenceFlow id="f5" sourceRef="Task_Volcar" targetRef="Task_Atender" />
+    <bpmn:sequenceFlow id="f6" sourceRef="Task_Atender" targetRef="GW_Prec" />
+    <bpmn:sequenceFlow id="f7" name="Sí" sourceRef="GW_Prec" targetRef="Task_Revisar" />
+    <bpmn:sequenceFlow id="f8" name="No" sourceRef="GW_Prec" targetRef="Task_Pedir" />
+    <bpmn:sequenceFlow id="f9" sourceRef="Task_Revisar" targetRef="Task_Preguntas" />
+    <bpmn:sequenceFlow id="f10" sourceRef="Task_Pedir" targetRef="Task_Preguntas" />
+    <bpmn:sequenceFlow id="f11" sourceRef="Task_Preguntas" targetRef="GW_Valido" />
+    <bpmn:sequenceFlow id="f12" name="Sí" sourceRef="GW_Valido" targetRef="Task_Motivo" />
+    <bpmn:sequenceFlow id="f13" name="No" sourceRef="GW_Valido" targetRef="Task_IndicarVerif" />
+    <bpmn:sequenceFlow id="f28" sourceRef="Task_IndicarVerif" targetRef="Task_Registrar" />
+    <bpmn:sequenceFlow id="f26" name="Sí" sourceRef="GW_Algo" targetRef="Task_Motivo" />
+    <bpmn:sequenceFlow id="f14" sourceRef="Task_Motivo" targetRef="Task_ConsultaMin" />
+    <bpmn:sequenceFlow id="f15" sourceRef="Task_ConsultaMin" targetRef="GW_Min" />
+    <bpmn:sequenceFlow id="f16" name="Sí" sourceRef="GW_Min" targetRef="Task_InfoCond" />
+    <bpmn:sequenceFlow id="f17" name="No" sourceRef="GW_Min" targetRef="Task_IndicarPago" />
+    <bpmn:sequenceFlow id="f29" sourceRef="Task_IndicarPago" targetRef="Task_Registrar" />
+    <bpmn:sequenceFlow id="f18" sourceRef="Task_InfoCond" targetRef="GW_Acepta" />
+    <bpmn:sequenceFlow id="f19" name="Sí" sourceRef="GW_Acepta" targetRef="Task_IniciarZHost" />
+    <bpmn:sequenceFlow id="f20" name="No" sourceRef="GW_Acepta" targetRef="Task_Registrar" />
+    <bpmn:sequenceFlow id="f21" sourceRef="Task_IniciarZHost" targetRef="Task_CrearCaso" />
+    <bpmn:sequenceFlow id="f22" sourceRef="Task_CrearCaso" targetRef="Task_GenerarNro" />
+    <bpmn:sequenceFlow id="f23" sourceRef="Task_GenerarNro" targetRef="Task_Informar" />
+    <bpmn:sequenceFlow id="f24" sourceRef="Task_Informar" targetRef="GW_Algo" />
+    <bpmn:sequenceFlow id="f25" name="No" sourceRef="GW_Algo" targetRef="Task_Agradecer" />
+    <bpmn:sequenceFlow id="f27" sourceRef="Task_Agradecer" targetRef="End_Fin" />
+    <bpmn:sequenceFlow id="f30" sourceRef="Task_Registrar" targetRef="End_Reg" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_Cliente_di" bpmnElement="Participant_Cliente" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="3050" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Mera_di" bpmnElement="Participant_Mera" isHorizontal="true">
+        <dc:Bounds x="160" y="190" width="3050" height="680" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Telesoft_di" bpmnElement="Lane_Telesoft" isHorizontal="true">
+        <dc:Bounds x="190" y="730" width="3020" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Operador_di" bpmnElement="Lane_Operador" isHorizontal="true">
+        <dc:Bounds x="190" y="470" width="3020" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Modulo_di" bpmnElement="Lane_Modulo" isHorizontal="true">
+        <dc:Bounds x="190" y="330" width="3020" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_IVR_di" bpmnElement="Lane_IVR" isHorizontal="true">
+        <dc:Bounds x="190" y="190" width="3020" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_Llamada_di" bpmnElement="StartEvent_Llamada">
+        <dc:Bounds x="232" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="212" y="285" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IVR_di" bpmnElement="Task_IVR">
+        <dc:Bounds x="340" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_IVR_di" bpmnElement="GW_IVR" isMarkerVisible="true">
+        <dc:Bounds x="515" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="485" y="195" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Volcar_di" bpmnElement="Task_Volcar">
+        <dc:Bounds x="650" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Atender_di" bpmnElement="Task_Atender">
+        <dc:Bounds x="850" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Prec_di" bpmnElement="GW_Prec" isMarkerVisible="true">
+        <dc:Bounds x="1015" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="985" y="493" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Revisar_di" bpmnElement="Task_Revisar">
+        <dc:Bounds x="1150" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Pedir_di" bpmnElement="Task_Pedir">
+        <dc:Bounds x="1150" y="635" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Preguntas_di" bpmnElement="Task_Preguntas">
+        <dc:Bounds x="1330" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Valido_di" bpmnElement="GW_Valido" isMarkerVisible="true">
+        <dc:Bounds x="1495" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1465" y="493" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IndicarVerif_di" bpmnElement="Task_IndicarVerif">
+        <dc:Bounds x="1470" y="635" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Motivo_di" bpmnElement="Task_Motivo">
+        <dc:Bounds x="1630" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ConsultaMin_di" bpmnElement="Task_ConsultaMin">
+        <dc:Bounds x="1780" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Min_di" bpmnElement="GW_Min" isMarkerVisible="true">
+        <dc:Bounds x="1935" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1905" y="493" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IndicarPago_di" bpmnElement="Task_IndicarPago">
+        <dc:Bounds x="1910" y="635" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InfoCond_di" bpmnElement="Task_InfoCond">
+        <dc:Bounds x="2060" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Acepta_di" bpmnElement="GW_Acepta" isMarkerVisible="true">
+        <dc:Bounds x="2215" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2185" y="493" width="110" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IniciarZHost_di" bpmnElement="Task_IniciarZHost">
+        <dc:Bounds x="2340" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CrearCaso_di" bpmnElement="Task_CrearCaso">
+        <dc:Bounds x="2490" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GenerarNro_di" bpmnElement="Task_GenerarNro">
+        <dc:Bounds x="2490" y="760" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Informar_di" bpmnElement="Task_Informar">
+        <dc:Bounds x="2650" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Algo_di" bpmnElement="GW_Algo" isMarkerVisible="true">
+        <dc:Bounds x="2835" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2805" y="588" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Agradecer_di" bpmnElement="Task_Agradecer">
+        <dc:Bounds x="2970" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Fin_di" bpmnElement="End_Fin">
+        <dc:Bounds x="3132" y="542" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3110" y="585" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Registrar_di" bpmnElement="Task_Registrar">
+        <dc:Bounds x="2190" y="760" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Reg_di" bpmnElement="End_Reg">
+        <dc:Bounds x="2372" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2335" y="822" width="110" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="f1_di" bpmnElement="f1">
+        <di:waypoint x="268" y="260" />
+        <di:waypoint x="340" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f2_di" bpmnElement="f2">
+        <di:waypoint x="440" y="260" />
+        <di:waypoint x="515" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f3_di" bpmnElement="f3">
+        <di:waypoint x="565" y="260" />
+        <di:waypoint x="700" y="260" />
+        <di:waypoint x="700" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="575" y="242" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f4_di" bpmnElement="f4">
+        <di:waypoint x="540" y="285" />
+        <di:waypoint x="540" y="560" />
+        <di:waypoint x="850" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="546" y="295" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f5_di" bpmnElement="f5">
+        <di:waypoint x="750" y="400" />
+        <di:waypoint x="900" y="400" />
+        <di:waypoint x="900" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f6_di" bpmnElement="f6">
+        <di:waypoint x="950" y="560" />
+        <di:waypoint x="1015" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f7_di" bpmnElement="f7">
+        <di:waypoint x="1065" y="560" />
+        <di:waypoint x="1150" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1085" y="542" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f8_di" bpmnElement="f8">
+        <di:waypoint x="1040" y="585" />
+        <di:waypoint x="1040" y="675" />
+        <di:waypoint x="1150" y="675" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046" y="605" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f9_di" bpmnElement="f9">
+        <di:waypoint x="1250" y="560" />
+        <di:waypoint x="1330" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f10_di" bpmnElement="f10">
+        <di:waypoint x="1250" y="675" />
+        <di:waypoint x="1380" y="675" />
+        <di:waypoint x="1380" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f11_di" bpmnElement="f11">
+        <di:waypoint x="1430" y="560" />
+        <di:waypoint x="1495" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f12_di" bpmnElement="f12">
+        <di:waypoint x="1545" y="560" />
+        <di:waypoint x="1630" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1565" y="542" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f13_di" bpmnElement="f13">
+        <di:waypoint x="1520" y="585" />
+        <di:waypoint x="1520" y="635" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1526" y="600" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f14_di" bpmnElement="f14">
+        <di:waypoint x="1730" y="560" />
+        <di:waypoint x="1780" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f15_di" bpmnElement="f15">
+        <di:waypoint x="1880" y="560" />
+        <di:waypoint x="1935" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f16_di" bpmnElement="f16">
+        <di:waypoint x="1985" y="560" />
+        <di:waypoint x="2060" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2005" y="542" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f17_di" bpmnElement="f17">
+        <di:waypoint x="1960" y="585" />
+        <di:waypoint x="1960" y="635" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1966" y="600" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f18_di" bpmnElement="f18">
+        <di:waypoint x="2160" y="560" />
+        <di:waypoint x="2215" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f19_di" bpmnElement="f19">
+        <di:waypoint x="2265" y="560" />
+        <di:waypoint x="2340" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2285" y="542" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f20_di" bpmnElement="f20">
+        <di:waypoint x="2240" y="585" />
+        <di:waypoint x="2240" y="760" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2246" y="610" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f21_di" bpmnElement="f21">
+        <di:waypoint x="2440" y="560" />
+        <di:waypoint x="2490" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f22_di" bpmnElement="f22">
+        <di:waypoint x="2540" y="600" />
+        <di:waypoint x="2540" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f23_di" bpmnElement="f23">
+        <di:waypoint x="2590" y="800" />
+        <di:waypoint x="2700" y="800" />
+        <di:waypoint x="2700" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f24_di" bpmnElement="f24">
+        <di:waypoint x="2750" y="560" />
+        <di:waypoint x="2835" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f25_di" bpmnElement="f25">
+        <di:waypoint x="2885" y="560" />
+        <di:waypoint x="2970" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2905" y="542" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f26_di" bpmnElement="f26">
+        <di:waypoint x="2860" y="535" />
+        <di:waypoint x="2860" y="478" />
+        <di:waypoint x="1680" y="478" />
+        <di:waypoint x="1680" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2866" y="505" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f27_di" bpmnElement="f27">
+        <di:waypoint x="3070" y="560" />
+        <di:waypoint x="3132" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f28_di" bpmnElement="f28">
+        <di:waypoint x="1520" y="715" />
+        <di:waypoint x="1520" y="800" />
+        <di:waypoint x="2190" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f29_di" bpmnElement="f29">
+        <di:waypoint x="1960" y="715" />
+        <di:waypoint x="1960" y="855" />
+        <di:waypoint x="2240" y="855" />
+        <di:waypoint x="2240" y="840" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f30_di" bpmnElement="f30">
+        <di:waypoint x="2290" y="800" />
+        <di:waypoint x="2372" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MF_1_di" bpmnElement="MF_1">
+        <di:waypoint x="250" y="140" />
+        <di:waypoint x="250" y="242" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="255" y="163" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MF_2_di" bpmnElement="MF_2">
+        <di:waypoint x="2700" y="520" />
+        <di:waypoint x="2700" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2702" y="286" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
